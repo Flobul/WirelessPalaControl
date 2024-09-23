@@ -6,7 +6,11 @@
 #ifdef ESP8266
 #include <ESP8266WebServer.h>
 #define WebServer ESP8266WebServer
+#if defined(ESP8266WEB_HAS_KEEPALIVE)
 #define SERVER_KEEPALIVE_FALSE() server.keepAlive(false);
+#else
+#define SERVER_KEEPALIVE_FALSE() // Si pas de keepAlive, on ne fait rien
+#endif
 #else
 #include <WebServer.h>
 #define SERVER_KEEPALIVE_FALSE()

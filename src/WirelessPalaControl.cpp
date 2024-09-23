@@ -245,7 +245,11 @@ bool WebPalaControl::publishHassDiscoveryToMqtt()
   jsonDoc["identifiers"][0] = uniqueIdPrefixWPalaControl;
   jsonDoc["manufacturer"] = F("Domochip");
   jsonDoc["model"] = F("WPalaControl");
+  #ifdef ESP8266
+  jsonDoc["name"] = WiFi.hostname();
+  #else
   jsonDoc["name"] = WiFi.getHostname();
+  #endif
   jsonDoc["sw_version"] = String(F("v")) + String(BASE_VERSION) + '-' + String(VERSION);
   serializeJson(jsonDoc, device); // serialize to device String
   jsonDoc.clear();                // clean jsonDoc
@@ -930,8 +934,11 @@ bool WebPalaControl::executePalaCmd(const String &cmd, String &strJson, bool pub
     if (cmdSuccess == Palazzetti::CommandResult::OK)
     {
       // ----- WPalaControl generated values -----
+      #ifdef ESP8266
+      data["LABEL"] = WiFi.hostname();
+      #else
       data["LABEL"] = WiFi.getHostname();
-
+      #endif
       // Network infos
       data["GWDEVICE"] = F("wlan0"); // always wifi
       data["MAC"] = WiFi.macAddress();
@@ -948,7 +955,10 @@ bool WebPalaControl::executePalaCmd(const String &cmd, String &strJson, bool pub
       data["WSSID"] = WiFi.SSID();
       data["WPR"] = (true) ? F("dhcp") : F("static");
       data["WMSK"] = WiFi.subnetMask().toString();
+      #ifdef ESP8266
+      #else
       data["WBCST"] = WiFi.broadcastIP().toString();
+      #endif
       data["WCH"] = String(WiFi.channel());
 
       // Ethernet infos
@@ -1008,7 +1018,11 @@ bool WebPalaControl::executePalaCmd(const String &cmd, String &strJson, bool pub
     cmdProcessed = true;
     cmdSuccess = Palazzetti::CommandResult::OK;
 
+    #ifdef ESP8266
+    data["LABEL"] = WiFi.hostname();
+    #else
     data["LABEL"] = WiFi.getHostname();
+    #endif
   }
 
   if (!cmdProcessed && cmd == F("GET ALLS"))
