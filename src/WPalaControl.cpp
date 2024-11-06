@@ -1221,7 +1221,7 @@ bool WPalaControl::executePalaCmd(const String &cmd, String &strJson, bool publi
     }
   }
 
-  if (!cmdProcessed && cmd == F("GET CHRD"))
+  if (!cmdProcessed && (cmd == F("GET CHRD") || cmd == F("GET JTMR")))
   {
     cmdProcessed = true;
     palaCategory = F("CHRD");
@@ -1574,7 +1574,7 @@ bool WPalaControl::executePalaCmd(const String &cmd, String &strJson, bool publi
       data["FAN2MODE"] = FAN2MODE;
       data["BLEMBMODE"] = BLEMBMODE;
       data["BLEDSPMODE"] = BLEDSPMODE;
-      data["CHRONOTYPE"] = 0; // disable chronothermostat (no planning) (enabled if > 1)
+      data["CHRONOTYPE"] = CHRONOTYPE; //chronotype set to 5 to be able to control it through the App
       data["AUTONOMYTYPE"] = AUTONOMYTYPE;
       data["NOMINALPWR"] = NOMINALPWR;
     }
